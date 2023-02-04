@@ -102,3 +102,10 @@ func get_chunks(path):
 						number += wl
 						files.append(i)
 	return files
+func get_map(name,x,y):
+	var i_worlds = search_world(name)
+	var name_world = i_worlds[1]
+	var type_world = i_worlds[0]
+	var path = "user://" + name_world + "/data"
+	for i in get_chunks(path):
+		var data_file = parse_json(load_from_file(i))

@@ -1,0 +1,6 @@
+названия: bow, sword, bow_crystal, sword_crystal, bow_stone, sword_stone
+размер 16х16
+
+bow, sword - деревяные
+bow_crystal, sword_crystal - фиолетовые
+bow_stone, sword_stone - серые

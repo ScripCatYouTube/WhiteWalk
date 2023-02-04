@@ -1,0 +1,4 @@
+названия: strong_wall.png udu_wall.png crystal_block.png
+размер:  32x32
+
+сохранять под таким же названием

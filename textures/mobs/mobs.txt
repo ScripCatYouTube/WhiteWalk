@@ -1,0 +1,6 @@
+названия: ninja_green.png ninja_red.png ninja_white.png agres.png agres_blue.png raider_green.png raider_red.png raider_white.png nonas.png nonas_global.png nonas_sok.png mob.png 
+размер:  32x32     
+
+мобы должна имметь общую метку(например ярлык) для обозначенния их мобами
+
+сохранять под таким же названием

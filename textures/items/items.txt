@@ -1,0 +1,11 @@
+названия: crystal_bit,copper_coin, silver_coin, gold_coin, stone_minicus, crystal_minicus, level_minicus, arrow, arrow_crystal, arrow_stone
+размер 16х16
+
+copper_coin, silver_coin, gold_coin - понятно, например copper_coin - медная монета. На монетах изображение цифр. На медной монете цифра 5. На серебреной 50. На золотой 100
+
+minicus - не большие штуки со своим цветом(типа crystal_minicus фиолетовый а stone_minicus серый, а level_minicus лаймовый)
+
+crystal_bit - это как кристал фиолетовый(может и розовый)
+arrow - деревяная
+arrow_crystal - фиолетовая
+arrow_stone - серая

@@ -1,0 +1,17 @@
+структура:
+	NAME WORLD
+		option.info -
+		data
+			chunk1.data
+			chunk2.data
+			...
+
+
+option.info:
+	name
+	game_version
+	count_maps_in_chunk = 10
+chunk0.data:
+	map1: [0,1,0,0,1, ...]
+	map2: ...
+	map3: ...

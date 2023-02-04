@@ -1,0 +1,156 @@
+extends Node
+
+var map_name
+var size_map
+var world
+var version_game_world
+var cordinate_map
+
+var defualt_size_map = [10,10]
+var game_version = "b0.1"
+var count_maps_in_chunk = 10
+var defualt_spawn_player = {"map":[0,0],"cordinate":[defualt_size_map[0] / 2,defualt_size_map[1] / 2]}
+var option_file = "option.info"
+
+func _ready():
+	#new_world("test")
+	#new_map("test",1,0)
+	var text =  parse_json(load_from_file("user://test/data/chunk1.data"))
+	print(text["map0"])
+	print()
+	print(text["map1"])
+	print()
+	print(text["map2"])
+	
+func create_file(name):
+	var file = File.new()
+	file.open(name, File.WRITE)
+	file.store_var("")
+	file.close()
+func save_to_file(name,data):
+	var file = File.new()
+	file.open(name, File.WRITE)
+	file.store_var(data)
+	file.close()
+func load_from_file(name):
+	var file = File.new()
+	var data
+	if file.file_exists(name):
+		file.open(name, File.READ)
+		data = file.get_var()
+		file.close()
+	return data
+	
+func get_files(path):
+	var files = []
+	var dir = Directory.new()
+	dir.open(path)
+	dir.list_dir_begin(true)
+
+	var file = dir.get_next()
+	while file != '':
+		files += [file]
+		file = dir.get_next()
+
+	return files
+func make_dir(folder,path="user://"):
+	var dir = Directory.new()
+	dir.open(path)
+	dir.make_dir(folder)
+
+func get_worlds():
+	var path = "user://"
+	var path_to_world
+	var to_option_file
+	var data
+	var text
+	var folders = get_files("user://")
+	var names = {}
+	if folders != null:
+		for i in folders:
+			path_to_world = path + i + "/"
+			to_option_file = path_to_world + option_file
+			text = load_from_file(to_option_file)
+			if text != null:
+				data = parse_json(text)
+				names[i] = data["name"]
+	return names
+
+func new_world(name):
+	var path = "user://" + name
+	var path_to_data = path + "/data"
+	var data = {"name":name,"game_version":game_version}
+	make_dir(path)
+	create_file(path + "/" + option_file)
+	save_to_file(path + "/" + option_file, to_json(data))
+	make_dir(path_to_data)
+	new_map(name,0,0)
+func new_map(name_world,x,y):
+	add_map_new("user://" + name_world + "/data",generation_map(x,y))
+func generation_map(x,y):
+	var count_cristals = Settings.cristals()
+	var count_npcs = Settings.npcs()
+	var count_mobs = Settings.mobs()
+	var _map = {"map":[],"player":{},"entity":{"items":[],"creature":[]},"cordinate":[str(x),str(y)]}
+	var block
+	var choose
+	var cc = 0
+	var cn = 0
+	var cm = 0 
+	var entity
+	randomize()
+	for x in range(defualt_size_map[0] + 1):
+		for y in range(defualt_size_map[1] + 1):
+			block = Settings.block()
+			_map["map"] += [Settings.block()]
+			if block == 0:
+				entity = Settings.rand(0,2)	
+				choose = [Settings.chance(),Settings.chance(),Settings.chance(),Settings.chance(),Settings.chance(),]
+				if [choose[0] == true or choose[2] == true and choose[4] == true] and cc < count_cristals:
+					_map["entity"]["items"] += [{"type":"cristal","name":"cristal","cordinate":[str(x * 32), str(y * 32)]}]
+					cc += 1
+					continue
+				if [choose[1] == false or choose[3] == true] and cn < count_npcs:
+					_map["entity"]["creature"].append({"type":"npc","name":"npc","cordinate":[str(x * 32), str(y * 32)]})
+					cn += 1
+					continue
+				if [entity == 1] and [choose[0] == false and choose[3] == true and choose[4] == true and choose[2] == false] and cm < count_mobs:
+					_map["entity"]["creature"].append({"type":"mob","name":"mob","cordinate":[str(x * 32), str(y * 32)]})
+					cm += 1
+					print(cm, " ", count_mobs)
+					continue							
+	return _map
+func make_chunk(count):
+	var chunk = {}
+	for i in range(0,count):
+		chunk["map"+str(i)] = "null"
+	return chunk
+func read_maps(data):
+	for i in data:
+		if typeof(data[i]) == TYPE_STRING:
+			return i
+	return false
+func add_map_new(path,data):
+	var folders = get_files(path)
+	print(path)
+	print(folders)
+	if folders == []:
+		var chunk_void = make_chunk(10)
+		chunk_void["map0"] = data
+		create_file(path + "/" + "chunk1.data")
+		save_to_file(path + "/" + "chunk1.data", to_json(chunk_void))
+		return
+	for i in folders:
+		var data_file = parse_json(load_from_file(path + "/" + i))
+		if read_maps(data_file):
+			print("aboba")
+			data_file[read_maps(data_file)] = data
+			save_to_file(path + "/" + i, to_json(data_file))
+			return
+		
+		
+		
+		
+		
+	
+

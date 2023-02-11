@@ -5,23 +5,19 @@ var size_map
 var world
 var version_game_world
 var cordinate_map
+var nickname_player
 
-var defualt_size_map = [10,10]
+var defualt_size_map = [30 * 3,19 * 3]
 var game_version = "b0.1"
 var count_maps_in_chunk = 10
 var defualt_spawn_player = {"map":[0,0],"cordinate":[defualt_size_map[0] / 2,defualt_size_map[1] / 2]}
 var option_file = "option.info"
 
-func _ready():
-	#new_world("test")
-	#new_map("test",1,0)
-	var text =  parse_json(load_from_file("user://test/data/chunk1.data"))
-	print(text["map0"])
-	print()
-	print(text["map1"])
-	print()
-	print(text["map2"])
-	
+#func _ready():
+#	var timeDict = OS.get_time()
+#	var date = {"year":OS.get_date()["year"], "month":OS.get_date()["month"], "day":OS.get_date()["day"], "hour":OS.get_time().hour, "minute":OS.get_time().minute, "second":OS.get_time().second}
+#	print(date)
+
 func create_file(name):
 	var file = File.new()
 	file.open(name, File.WRITE)
@@ -57,7 +53,6 @@ func make_dir(folder,path="user://"):
 	var dir = Directory.new()
 	dir.open(path)
 	dir.make_dir(folder)
-
 func get_worlds():
 	var path = "user://"
 	var path_to_world
@@ -79,7 +74,7 @@ func get_worlds():
 func new_world(name):
 	var path = "user://" + name
 	var path_to_data = path + "/data"
-	var data = {"name":name,"game_version":game_version}
+	var data = {"name":name, "game_version":game_version, "date":{"year":OS.get_date()["year"], "month":OS.get_date()["month"], "day":OS.get_date()["day"], "hour":OS.get_time().hour, "minute":OS.get_time().minute, "second":OS.get_time().second}}
 	make_dir(path)
 	create_file(path + "/" + option_file)
 	save_to_file(path + "/" + option_file, to_json(data))
@@ -117,7 +112,6 @@ func generation_map(x,y):
 				if [entity == 1] and [choose[0] == false and choose[3] == true and choose[4] == true and choose[2] == false] and cm < count_mobs:
 					_map["entity"]["creature"].append({"type":"mob","name":"mob","cordinate":[str(x * 32), str(y * 32)]})
 					cm += 1
-					print(cm, " ", count_mobs)
 					continue							
 	return _map
 func make_chunk(count):
@@ -132,8 +126,7 @@ func read_maps(data):
 	return false
 func add_map_new(path,data):
 	var folders = get_files(path)
-	print(path)
-	print(folders)
+	
 	if folders == []:
 		var chunk_void = make_chunk(10)
 		chunk_void["map0"] = data
@@ -143,14 +136,46 @@ func add_map_new(path,data):
 	for i in folders:
 		var data_file = parse_json(load_from_file(path + "/" + i))
 		if read_maps(data_file):
-			print("aboba")
 			data_file[read_maps(data_file)] = data
 			save_to_file(path + "/" + i, to_json(data_file))
 			return
-		
-		
-		
-		
-		
-	
+	var chunk_void = make_chunk(10)
+	chunk_void["map0"] = data
+	create_file(path + "/" + "chunk" + str(len(folders)+1) + ".data")
+	save_to_file(path + "/" + "chunk" + str(len(folders)+1) + ".data", to_json(chunk_void))
+func read_world_map(name,x,y,file):
+	var path = "user://" + name + "/data/" + file
+	print(path)
+	var data_chunk = parse_json(load_from_file(path))
+	for i in data_chunk:
+		if data_chunk[i]["cordinate"][0] == x and data_chunk[i]["cordinate"][1] == y:
+			return data_chunk[i]["map"]
+func read_world(name,player):
+	var path = "user://" + name
+	for file in get_files(path + "/data"):
+		var data_chunk = parse_json(load_from_file(path + "/data/" + file))
+		for i in data_chunk:
+			var d_ch = data_chunk[i]
+			if typeof(d_ch) == TYPE_DICTIONARY:
+				if player in data_chunk[i]["player"]:
+					return [{"cordinate_map":data_chunk[i]["cordinate"], "cordinate_player":[data_chunk[i]["player"][player]["cordinate"][0],data_chunk[i]["player"][player]["cordinate"][1]],"file":file}, true]
+	return [{"cordinate_map":[defualt_size_map[0],defualt_size_map[1]], "cordinate_player":defualt_spawn_player["cordinate"],"file":"chunk1.data"}, false]
+func read_world_map_cordinate(name,x,y):
+	var path = "user://" + name
+	for i in get_files(path + "/data"):
+		var data_chunk = parse_json(load_from_file(path + "/data/" + i))
+		for map in data_chunk:
+			if typeof(map) == TYPE_DICTIONARY:
+				print(data_chunk[map])
+				if int(data_chunk[map]["cordinate"][0]) == x and int(data_chunk["map"]["cordinate"][1]) == y:
+					return data_chunk[map]["map"]
+	return null
+func add_player_to_map(name,file,name_player,x,y,x_map,y_map):
+	var path = "user://" + name + "/data/" + file
+	var data = parse_json(load_from_file(path))
+	for i in data:
+		if int(data[i]["cordinate"][0]) == x_map and int(data[i]["cordinate"][1]) == y_map:
+			data[i]["player"][name_player] = {"cordinate":[x,y],"inventory":{"hand":{"1":[],"2":[]},"backpack":{"1":[],"2":[],"3":[],"4":[],"5":[],"6":[]}}}
+			save_to_file(path,to_json(data))
+			return
 

@@ -6,17 +6,17 @@ var world
 var version_game_world
 var cordinate_map
 var nickname_player
+var selected_world_block
+var address_server
+var status_player_lists = ["no play", "multiplayer", "singleplayer"]
+var status_player_in_game = ""
+var settings_type
 
 var defualt_size_map = [30 * 3,19 * 3]
 var game_version = "b0.1"
 var count_maps_in_chunk = 10
 var defualt_spawn_player = {"map":[0,0],"cordinate":[defualt_size_map[0] / 2,defualt_size_map[1] / 2]}
 var option_file = "option.info"
-
-#func _ready():
-#	var timeDict = OS.get_time()
-#	var date = {"year":OS.get_date()["year"], "month":OS.get_date()["month"], "day":OS.get_date()["day"], "hour":OS.get_time().hour, "minute":OS.get_time().minute, "second":OS.get_time().second}
-#	print(date)
 
 func create_file(name):
 	var file = File.new()
@@ -36,7 +36,7 @@ func load_from_file(name):
 		data = file.get_var()
 		file.close()
 	return data
-	
+
 func get_files(path):
 	var files = []
 	var dir = Directory.new()
@@ -145,7 +145,6 @@ func add_map_new(path,data):
 	save_to_file(path + "/" + "chunk" + str(len(folders)+1) + ".data", to_json(chunk_void))
 func read_world_map(name,x,y,file):
 	var path = "user://" + name + "/data/" + file
-	print(path)
 	var data_chunk = parse_json(load_from_file(path))
 	for i in data_chunk:
 		if data_chunk[i]["cordinate"][0] == x and data_chunk[i]["cordinate"][1] == y:

@@ -5,6 +5,7 @@ var defualt_nickname_player = "MushroomPLayer123"
 var text = ""
 
 func _ready():
+	Global.settings_type = "main"
 	var file = File.new()
 	if file.file_exists("user://OPTIONS/" + settings_file):
 		var data_file = Global.load_from_file("user://OPTIONS/" + settings_file)

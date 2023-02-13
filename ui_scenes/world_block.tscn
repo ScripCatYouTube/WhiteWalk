@@ -11,8 +11,8 @@ margin_right = 511.0
 margin_bottom = 204.0
 
 [node name="WorldBlock" type="Sprite" parent="."]
-position = Vector2( 256, 104 )
-scale = Vector2( 0.681333, 0.542667 )
+position = Vector2( 256, 102.875 )
+scale = Vector2( 0.682667, 0.548667 )
 texture = ExtResource( 2 )
 
 [node name="name" type="Label" parent="."]

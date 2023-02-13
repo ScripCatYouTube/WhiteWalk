@@ -23,3 +23,7 @@ func _load_map(map):
 		if x-1 > Global.defualt_size_map[0]:
 			x = 0
 			y += 1 
+
+func _process(delta):
+	if Input.is_action_pressed("to_menu"):
+		get_tree().change_scene("res://scenes/menu_in_game.tscn")

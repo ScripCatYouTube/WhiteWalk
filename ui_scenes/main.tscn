@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://textures/blocks/crystal_wall.png" type="Texture" id=1]
 [ext_resource path="res://textures/blocks/strong_wall.png" type="Texture" id=2]
 [ext_resource path="res://script_scenes/singl.gd" type="Script" id=3]
 [ext_resource path="res://script_scenes/multi_menu.gd" type="Script" id=4]
 [ext_resource path="res://script_scenes/menu.gd" type="Script" id=5]
+[ext_resource path="res://objects/player.tscn" type="PackedScene" id=6]
 
 [node name="menu" type="Control"]
 anchor_right = 1.0
@@ -87,6 +88,9 @@ margin_top = 272.0
 margin_right = 688.0
 margin_bottom = 286.0
 text = "READY"
+
+[node name="Node2D" parent="." instance=ExtResource( 6 )]
+position = Vector2( 200, 312 )
 
 [connection signal="pressed" from="singl" to="singl" method="_on_singl_pressed"]
 [connection signal="pressed" from="multi" to="multi" method="_on_multi_pressed"]

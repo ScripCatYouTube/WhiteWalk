@@ -11,13 +11,36 @@ var address_server
 var status_player_lists = ["no play", "multiplayer", "singleplayer"]
 var status_player_in_game = ""
 var settings_type
+var keys = {"LEFT":"A","UP":"W","DOWN":"S","RIGHT":"D","ATTACK":"Left Mouse Button (LMB)","PICK ITEM AND EDIT BLOCKS":"Right Mouse Button (RMB)","SAY WITH PROMISER":"Middle Mouse Button (MMB)"}
+#var list_keys = ["LEFT","UP","DOWN","RIGHT","ATTACK","PICK ITEM AND EDIT BLOCKS","SAY WITH PROMISER" ]
+var speed_player = 2
+var is_first_created_world = false
 
-var defualt_size_map = [30 * 3,19 * 3]
+var defualt_size_map = [90,57]
 var game_version = "b0.1"
 var count_maps_in_chunk = 10
 var defualt_spawn_player = {"map":[0,0],"cordinate":[defualt_size_map[0] / 2,defualt_size_map[1] / 2]}
 var option_file = "option.info"
 
+func _ready():
+	pass
+func _notification(what):
+	if what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
+		_saving()
+
+func _saving():
+	if Global.world == null:
+		return
+	var data = Global.read_for_edit_world(Global.world,Global.nickname_player)
+	data["player"][Global.nickname_player]["cordinate"] = RAM.position_player
+	Global.edit_world_with_hand(Global.world,data)
+	
+func _add_key(name,key):
+	InputMap.add_action(name,int(key))
+func _edit_key(name,key):
+	if key != null:
+		InputMap.erase_action(name)
+		InputMap.add_action(name,int(key))
 func create_file(name):
 	var file = File.new()
 	file.open(name, File.WRITE)
@@ -37,6 +60,19 @@ func load_from_file(name):
 		file.close()
 	return data
 
+func delete_world(world):
+	var dir = Directory.new()
+	var file = File.new()
+	var path = "user://" + world
+
+	if file.file_exists(path + "/" + "option.info"):
+		dir.remove(path + "/" + "option.info")
+	if dir.dir_exists(path + "/" + "data"):
+		for i in get_files(path + "/" + "data"):
+			dir.remove(path + "/" + "data/" + i)
+		dir.remove(path + "/" + "data")
+	dir.remove(path)
+	
 func get_files(path):
 	var files = []
 	var dir = Directory.new()
@@ -164,11 +200,17 @@ func read_world_map_cordinate(name,x,y):
 	for i in get_files(path + "/data"):
 		var data_chunk = parse_json(load_from_file(path + "/data/" + i))
 		for map in data_chunk:
-			if typeof(map) == TYPE_DICTIONARY:
+			if typeof(data_chunk[map]) == TYPE_DICTIONARY:
 				print(data_chunk[map])
-				if int(data_chunk[map]["cordinate"][0]) == x and int(data_chunk["map"]["cordinate"][1]) == y:
+				if int(data_chunk[map]["cordinate"][0]) == x and int(data_chunk[map]["cordinate"][1]) == y:
 					return data_chunk[map]["map"]
-	return null
+	return "1"
+func read_world_cordinate(name,x,y):
+	var path = "user://" + name
+	for i in get_files(path + "/data"):
+		var data_chunk = parse_json(load_from_file(path + "/data/" + i))
+		
+			
 func add_player_to_map(name,file,name_player,x,y,x_map,y_map):
 	var path = "user://" + name + "/data/" + file
 	var data = parse_json(load_from_file(path))
@@ -177,4 +219,32 @@ func add_player_to_map(name,file,name_player,x,y,x_map,y_map):
 			data[i]["player"][name_player] = {"cordinate":[x,y],"inventory":{"hand":{"1":[],"2":[]},"backpack":{"1":[],"2":[],"3":[],"4":[],"5":[],"6":[]}}}
 			save_to_file(path,to_json(data))
 			return
+func _title_cordinate(x,y,tilemap):
+	var tile_size = tilemap.cell_size
+	var tile_origin = tilemap.cell_tile_origin
+	var tile_x = int((x - tile_origin) / tile_size.x)
+	var tile_y = int((y - tile_origin) / tile_size.y)
 
+	# Получение координат центра тайла
+	var tile_center_x = tile_origin + tile_x * tile_size.x + tile_size.x / 2
+	var tile_center_y = tile_origin + tile_y * tile_size.y + tile_size.y / 2
+	tile_center_x *= tile_size
+	tile_center_y *= tile_size
+	return [tile_center_x[0], tile_center_y[0]]
+
+func read_for_edit_world(name,player):
+	var path = "user://" + name
+	for i in get_files(path + "/data"):
+		var data_chunk = parse_json(load_from_file(path + "/data/" + i))
+		for map in data_chunk:
+			if typeof(data_chunk[map]) == TYPE_DICTIONARY:
+				if Global.nickname_player in data_chunk[map]["player"]:
+					return data_chunk[map]			
+func edit_world_with_hand(name,data):
+	var path = "user://" + name
+	for i in get_files(path + "/data"):
+		var data_chunk = parse_json(load_from_file(path + "/data/" + i))
+		for map in data_chunk:
+			if typeof(data_chunk[map]) == TYPE_DICTIONARY:
+				data_chunk[map] = data
+				save_to_file(path + "/data/" + i, to_json(data_chunk))

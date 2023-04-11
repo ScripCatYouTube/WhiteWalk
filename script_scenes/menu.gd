@@ -32,3 +32,16 @@ func _process(delta):
 	else:
 		$status.add_color_override("font_color", Color(1,0,0,1))
 		$status.text = "You cannot enter the game with this nickname"
+
+
+func _on_settings_pressed():
+	Global.settings_type = "menu"
+	get_tree().change_scene("res://scenes/settings.tscn")
+
+
+func _on_singl_pressed():
+	get_tree().change_scene("res://ui_scenes/singlplayer_menu.tscn")
+
+
+func _on_multi_pressed():
+	get_tree().change_scene("res://ui_scenes/multiplayer_menu.tscn")

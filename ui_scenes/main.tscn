@@ -1,11 +1,9 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://textures/blocks/crystal_wall.png" type="Texture" id=1]
-[ext_resource path="res://textures/blocks/strong_wall.png" type="Texture" id=2]
-[ext_resource path="res://script_scenes/singl.gd" type="Script" id=3]
-[ext_resource path="res://script_scenes/multi_menu.gd" type="Script" id=4]
+[ext_resource path="res://assets/block/crystal_wall.png" type="Texture" id=1]
+[ext_resource path="res://assets/block/strong_wall.png" type="Texture" id=2]
+[ext_resource path="res://lanquges/lanquges.tres" type="Theme" id=3]
 [ext_resource path="res://script_scenes/menu.gd" type="Script" id=5]
-[ext_resource path="res://objects/player.tscn" type="PackedScene" id=6]
 
 [node name="menu" type="Control"]
 anchor_right = 1.0
@@ -32,39 +30,41 @@ texture = ExtResource( 2 )
 offset = Vector2( -8.75, -5.00376 )
 
 [node name="singl" type="Button" parent="."]
-margin_left = 376.0
-margin_top = 184.0
-margin_right = 480.0
-margin_bottom = 204.0
+margin_left = 336.0
+margin_top = 176.0
+margin_right = 476.0
+margin_bottom = 201.0
 rect_scale = Vector2( 2, 2 )
+theme = ExtResource( 3 )
 text = "SINGLEPLAYER"
-script = ExtResource( 3 )
 
 [node name="multi" type="Button" parent="."]
-margin_left = 376.0
-margin_top = 272.0
-margin_right = 480.0
-margin_bottom = 292.0
+margin_left = 344.0
+margin_top = 256.0
+margin_right = 477.0
+margin_bottom = 281.0
 rect_scale = Vector2( 2, 2 )
+theme = ExtResource( 3 )
 text = "MULTIPLAYER"
-script = ExtResource( 4 )
 
 [node name="settings" type="Button" parent="."]
 anchor_right = 0.031
 anchor_bottom = 0.067
-margin_left = 408.0
-margin_top = 392.0
-margin_right = 448.256
-margin_bottom = 371.8
+margin_left = 392.0
+margin_top = 328.0
+margin_right = 453.256
+margin_bottom = 312.8
 rect_scale = Vector2( 2, 2 )
-disabled = true
+theme = ExtResource( 3 )
 text = "SETTINGS"
 
 [node name="name" type="Label" parent="."]
-margin_left = 328.0
-margin_right = 407.0
-margin_bottom = 14.0
+margin_left = 288.0
+margin_top = -8.0
+margin_right = 394.0
+margin_bottom = 11.0
 rect_scale = Vector2( 4, 4 )
+theme = ExtResource( 3 )
 text = "WALKWHITE"
 
 [node name="input_text" type="Label" parent="."]
@@ -72,25 +72,27 @@ margin_left = 648.0
 margin_top = 296.0
 margin_right = 984.0
 margin_bottom = 310.0
+theme = ExtResource( 3 )
 text = "INPUT NICKNAME:"
 
 [node name="input_nickname" type="LineEdit" parent="."]
 margin_left = 648.0
-margin_top = 216.0
+margin_top = 208.0
 margin_right = 820.0
-margin_bottom = 240.0
+margin_bottom = 237.0
 rect_scale = Vector2( 2, 2 )
+theme = ExtResource( 3 )
 text = "Player"
+caret_blink = true
 
 [node name="status" type="Label" parent="."]
 margin_left = 648.0
 margin_top = 272.0
 margin_right = 688.0
 margin_bottom = 286.0
+theme = ExtResource( 3 )
 text = "READY"
 
-[node name="Node2D" parent="." instance=ExtResource( 6 )]
-position = Vector2( 200, 312 )
-
-[connection signal="pressed" from="singl" to="singl" method="_on_singl_pressed"]
-[connection signal="pressed" from="multi" to="multi" method="_on_multi_pressed"]
+[connection signal="pressed" from="singl" to="." method="_on_singl_pressed"]
+[connection signal="pressed" from="multi" to="." method="_on_multi_pressed"]
+[connection signal="pressed" from="settings" to="." method="_on_settings_pressed"]

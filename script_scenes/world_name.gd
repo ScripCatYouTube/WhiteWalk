@@ -14,4 +14,12 @@ func _on_create_pressed():
 		Global.new_world(input_text)
 		Global.world = input_text
 		Global.cordinate_map = Global.defualt_spawn_player["map"]
+		Global.is_first_created_world = true
 		get_tree().change_scene("res://scenes/map.tscn")
+
+
+func _on_back_pressed():
+	if RAM.is_first_world == false:
+		get_tree().change_scene("res://ui_scenes/singlplayer_menu.tscn")
+	else:
+		get_tree().change_scene("res://ui_scenes/main.tscn")

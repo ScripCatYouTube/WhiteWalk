@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://textures/blocks/crystal_wall.png" type="Texture" id=1]
-[ext_resource path="res://textures/blocks/strong_wall.png" type="Texture" id=2]
-[ext_resource path="res://script_scenes/back_menu_create_world.gd" type="Script" id=3]
+[ext_resource path="res://assets/block/strong_wall.png" type="Texture" id=1]
+[ext_resource path="res://assets/block/crystal_wall.png" type="Texture" id=2]
+[ext_resource path="res://lanquges/lanquges.tres" type="Theme" id=3]
 [ext_resource path="res://script_scenes/world_name.gd" type="Script" id=4]
 
 [node name="Node2D" type="Node2D"]
@@ -11,28 +11,28 @@ script = ExtResource( 4 )
 [node name="CrystalWall" type="Sprite" parent="."]
 position = Vector2( 640, 136 )
 scale = Vector2( 32, 1.75 )
-texture = ExtResource( 1 )
+texture = ExtResource( 2 )
 offset = Vector2( -4, -61.7143 )
 
 [node name="CrystalWall2" type="Sprite" parent="."]
 position = Vector2( 640, 685.714 )
 scale = Vector2( 32, 1.875 )
-texture = ExtResource( 1 )
+texture = ExtResource( 2 )
 offset = Vector2( -4, -61.7143 )
 
 [node name="StrongWall" type="Sprite" parent="."]
 position = Vector2( 512, 296 )
 scale = Vector2( 32, 15.25 )
-texture = ExtResource( 2 )
+texture = ExtResource( 1 )
 
 [node name="back" type="Button" parent="."]
-margin_left = 928.0
-margin_top = 552.0
-margin_right = 974.0
-margin_bottom = 572.0
+margin_left = 896.0
+margin_top = 544.0
+margin_right = 955.0
+margin_bottom = 569.0
 rect_scale = Vector2( 2, 2 )
+theme = ExtResource( 3 )
 text = "BACK"
-script = ExtResource( 3 )
 
 [node name="input" type="LineEdit" parent="."]
 margin_left = 232.0
@@ -41,6 +41,7 @@ margin_right = 476.0
 margin_bottom = 154.0
 rect_scale = Vector2( 2, 2 )
 rect_clip_content = true
+theme = ExtResource( 3 )
 text = "New World"
 max_length = 24
 context_menu_enabled = false
@@ -52,37 +53,40 @@ selecting_enabled = false
 deselect_on_focus_loss_enabled = false
 
 [node name="createworld" type="Label" parent="."]
-margin_left = 342.0
-margin_top = 8.0
-margin_right = 441.0
-margin_bottom = 22.0
+margin_left = 296.0
+margin_right = 431.0
+margin_bottom = 19.0
 rect_scale = Vector2( 3, 3 )
+theme = ExtResource( 3 )
 text = "CREATE WORLD"
 
 [node name="1q" type="Label" parent="."]
-margin_left = 232.0
+margin_left = 230.0
 margin_top = 192.0
-margin_right = 404.0
-margin_bottom = 206.0
+margin_right = 419.0
+margin_bottom = 211.0
 rect_scale = Vector2( 1.5, 1.5 )
+theme = ExtResource( 3 )
 text = "Create your world in name:"
 
 [node name="1" type="Label" parent="."]
-margin_left = 496.0
+margin_left = 520.0
 margin_top = 192.0
-margin_right = 536.0
-margin_bottom = 206.0
+margin_right = 560.0
+margin_bottom = 211.0
 rect_scale = Vector2( 1.5, 1.5 )
+theme = ExtResource( 3 )
 text = "00000"
 
 [node name="create" type="Button" parent="."]
 margin_left = 8.0
-margin_top = 552.0
-margin_right = 20.0
-margin_bottom = 572.0
+margin_top = 544.0
+margin_right = 155.0
+margin_bottom = 569.0
 rect_scale = Vector2( 2, 2 )
+theme = ExtResource( 3 )
 text = "CREATE WORLD"
 
-[connection signal="pressed" from="back" to="back" method="_on_back_pressed"]
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]
 [connection signal="text_changed" from="input" to="." method="_on_LineEdit_text_changed"]
 [connection signal="pressed" from="create" to="." method="_on_create_pressed"]

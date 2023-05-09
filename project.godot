@@ -16,7 +16,7 @@ config/use_custom_user_dir=true
 config/custom_user_dir_name="/WalkWhite"
 boot_splash/image="res://assets/ui/bg/mushroomchips_present.png"
 boot_splash/bg_color=Color( 0.141176, 0.141176, 0.141176, 1 )
-config/icon="res://textures/mobs/ninja_green.png"
+config/icon="res://assets/mobs/ninja_green.png"
 
 [autoload]
 
@@ -28,7 +28,7 @@ ROM="*res://script/rom.gd"
 [display]
 
 window/stretch/mode="2d"
-window/stretch/aspect="keep"
+window/stretch/aspect="expand"
 
 [input]
 

@@ -1,4 +1,4 @@
-extends Node2D
+extends Control
 
 var count_worlds 
 var latest_value = 0
@@ -21,7 +21,7 @@ func _ready():
 		world.set_name(str(count_worlds))
 		$"Node2D/Control".add_child(world)
 		count_worlds += 1
-	$"VScrollBar".max_value = count_worlds * 50
+	$"Node2D2/VScrollBar".max_value = count_worlds * 50
 	RAM.is_first_world = false
 	if  count_worlds == 0:
 		RAM.is_first_world = true
@@ -63,13 +63,13 @@ func _process(delta):
 
 func _physics_process(delta):
 	if selected_world != null:
-		$"change".disabled= false
-		$"play".disabled = false
-		$"delete".disabled = false
+		$"Node2D2/change".disabled= false
+		$"Node2D2/play".disabled = false
+		$"Node2D2/delete".disabled = false
 	else:
-		$"change".disabled = true
-		$"play".disabled = true
-		$"delete".disabled = true		
+		$"Node2D2/change".disabled = true
+		$"Node2D2/play".disabled = true
+		$"Node2D2/delete".disabled = true		
 
 func _on_VScrollBar_value_changed(value):
 	if value == 0:

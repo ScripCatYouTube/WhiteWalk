@@ -22,8 +22,11 @@ var count_maps_in_chunk = 10
 var defualt_spawn_player = {"map":[0,0],"cordinate":[defualt_size_map[0] / 2,defualt_size_map[1] / 2]}
 var option_file = "option.info"
 
+signal MAP_SAVE
+
 func _ready():
 	pass
+	
 func _notification(what):
 	if what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
 		_saving()
@@ -31,9 +34,14 @@ func _notification(what):
 func _saving():
 	if Global.world == null:
 		return
-	var data = Global.read_for_edit_world(Global.world,Global.nickname_player)
+	var data
+	if nickname_player == null or nickname_player == "":
+		data = Global.read_for_edit_world(Global.world,"Player")
+	else:
+		data = Global.read_for_edit_world(Global.world,Global.nickname_player)
 	data["player"][Global.nickname_player]["cordinate"] = RAM.position_player
 	Global.edit_world_with_hand(Global.world,data)
+	RAM.mode_saving = true
 	
 func _add_key(name,key):
 	InputMap.add_action(name,int(key))
@@ -122,7 +130,7 @@ func generation_map(x,y):
 	var count_cristals = Settings.cristals()
 	var count_npcs = Settings.npcs()
 	var count_mobs = Settings.mobs()
-	var _map = {"map":[],"player":{},"entity":{"items":[],"creature":[]},"cordinate":[str(x),str(y)]}
+	var _map = {"map":[],"player":{},"entity":{"items":[],"creature":[]},"cordinate":[str(x),str(y)],"size":[defualt_size_map[0], defualt_size_map[1]]}
 	var block
 	var choose
 	var cc = 0
@@ -130,8 +138,8 @@ func generation_map(x,y):
 	var cm = 0 
 	var entity
 	randomize()
-	for x in range(defualt_size_map[0] + 1):
-		for y in range(defualt_size_map[1] + 1):
+	for x in range(defualt_size_map[0] - 1):
+		for y in range(defualt_size_map[1] - 1):
 			block = Settings.block()
 			_map["map"] += [Settings.block()]
 			if block == 0:
@@ -193,7 +201,7 @@ func read_world(name,player):
 			var d_ch = data_chunk[i]
 			if typeof(d_ch) == TYPE_DICTIONARY:
 				if player in data_chunk[i]["player"]:
-					return [{"cordinate_map":data_chunk[i]["cordinate"], "cordinate_player":[data_chunk[i]["player"][player]["cordinate"][0],data_chunk[i]["player"][player]["cordinate"][1]],"file":file}, true]
+					return [{"cordinate_map":data_chunk[i]["cordinate"], "cordinate_player":[data_chunk[i]["player"][player]["cordinate"][0],data_chunk[i]["player"][player]["cordinate"][1]],"sizex":data_chunk[i]["size"][0],"sizey":data_chunk[i]["size"][1],"file":file}, true]
 	return [{"cordinate_map":[defualt_size_map[0],defualt_size_map[1]], "cordinate_player":defualt_spawn_player["cordinate"],"file":"chunk1.data"}, false]
 func read_world_map_cordinate(name,x,y):
 	var path = "user://" + name
@@ -201,7 +209,6 @@ func read_world_map_cordinate(name,x,y):
 		var data_chunk = parse_json(load_from_file(path + "/data/" + i))
 		for map in data_chunk:
 			if typeof(data_chunk[map]) == TYPE_DICTIONARY:
-				print(data_chunk[map])
 				if int(data_chunk[map]["cordinate"][0]) == x and int(data_chunk[map]["cordinate"][1]) == y:
 					return data_chunk[map]["map"]
 	return "1"
@@ -246,5 +253,36 @@ func edit_world_with_hand(name,data):
 		var data_chunk = parse_json(load_from_file(path + "/data/" + i))
 		for map in data_chunk:
 			if typeof(data_chunk[map]) == TYPE_DICTIONARY:
-				data_chunk[map] = data
-				save_to_file(path + "/data/" + i, to_json(data_chunk))
+				if int(data_chunk[map]["cordinate"][0]) == RAM.cordinate_map[0] and int(data_chunk[map]["cordinate"][1]) == int(RAM.cordinate_map[1]):
+					data_chunk[map] = data
+					save_to_file(path + "/data/" + i, to_json(data_chunk))
+
+func get_all_blocks_in_array_TileMap(node,size_x,size_y):
+	var output_array = []
+	var x = 0
+	var y = 0
+	var res = size_x * size_y
+	for i in range(res):
+		if node.get_cell(x,y) != -1:
+			output_array.append(node.get_cell(x,y))
+		#print(x," ",y, " ",node.get_cell(x,y))
+		
+		if x > size_x:
+			y += 1
+			x = 0
+		x += 1
+	return output_array
+	"""
+	var tilemap = node
+	var tile_list = []
+
+	for x in range(tilemap.get_used_rect().size.x):
+		for y in range(tilemap.get_used_rect().size.y):
+			var tile_id = tilemap.get_cell(x, y)
+			if tile_id != -1:
+				tile_list.append(tile_id)
+	return tile_list
+	"""	
+
+func oldcords_to_tilecords():
+	pass

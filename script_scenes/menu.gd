@@ -1,4 +1,4 @@
-extends Control
+extends Node2D
 
 var settings_file = "settings.info"
 var defualt_nickname_player = "MushroomPLayer123"
